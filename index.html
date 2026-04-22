@@ -100,7 +100,7 @@
             <div style="margin-top: 20px; min-height: 100px;">
                 <button class="btn-main" onclick="showFinalPopup()">Chốt đơn luôn!</button>
                 <div id="btn-run-container" style="display: inline-block;">
-                    <button id="btn-run" onmouseover="runAway()">Để em suy nghĩ đã...</button>
+                    <button id="btn-run" onmouseover="runAway()" ontouchstart="runAway(event)" onclick="runAway(event)">Để em suy nghĩ đã...</button>
                 </div>
             </div>
         </div>
@@ -126,7 +126,7 @@
         <h2 style="color: #ff4d6d; line-height: 1.4;">À em chính là cô bé xinh đẹp có ngày sinh nhật hôm nay phải không? 😍</h2>
         <div style="margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; min-height: 200px; justify-content: center;">
             <button id="btn-yes" class="btn-main" onclick="showMainContent()">Đúng dị</button>
-            <button id="btn-no" style="background: #f0f0f0; color: #555; padding: 12px 25px; border-radius: 50px; transition: 0.2s; z-index: 5;" onmouseover="handleNoHover()">Ko phải</button>
+            <button id="btn-no" style="background: #f0f0f0; color: #555; padding: 12px 25px; border-radius: 50px; transition: 0.2s; z-index: 5;" onmouseover="handleNoHover()" ontouchstart="handleNoHover(event)" onclick="handleNoHover(event)">Ko phải</button>
         </div>
     </div>
 
@@ -169,7 +169,8 @@
             }
         }
 
-        function handleNoHover() {
+        function handleNoHover(event) {
+            if (event) event.preventDefault();
             const btnNo = document.getElementById('btn-no');
             const btnYes = document.getElementById('btn-yes');
 
@@ -189,8 +190,11 @@
 
             // 2. Cho nút "Ko phải" chạy trốn liên tục
             btnNo.style.position = 'fixed';
-            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+            const margin = 12;
+            const maxX = Math.max(margin, window.innerWidth - btnNo.offsetWidth - margin);
+            const maxY = Math.max(margin, window.innerHeight - btnNo.offsetHeight - margin);
+            const x = margin + Math.random() * (maxX - margin);
+            const y = margin + Math.random() * (maxY - margin);
             btnNo.style.left = x + 'px';
             btnNo.style.top = y + 'px';
         }
@@ -211,12 +215,16 @@
             document.getElementById('btn-run-container').style.display = 'inline-block';
         }
 
-        function runAway() {
+        function runAway(event) {
+            if (event) event.preventDefault();
             const btn = document.getElementById('btn-run');
             btn.innerText = trollTexts[Math.floor(Math.random() * trollTexts.length)];
             btn.style.position = 'fixed';
-            btn.style.left = Math.random() * (window.innerWidth - btn.offsetWidth) + 'px';
-            btn.style.top = Math.random() * (window.innerHeight - btn.offsetHeight) + 'px';
+            const margin = 12;
+            const maxX = Math.max(margin, window.innerWidth - btn.offsetWidth - margin);
+            const maxY = Math.max(margin, window.innerHeight - btn.offsetHeight - margin);
+            btn.style.left = margin + Math.random() * (maxX - margin) + 'px';
+            btn.style.top = margin + Math.random() * (maxY - margin) + 'px';
         }
 
         function showFinalPopup() {
