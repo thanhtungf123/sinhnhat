@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ủa Có Cái Gì Nè ❤️</title>
+    <style>
+        body {
+            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; background: #fff0f3; font-family: 'Arial', sans-serif;
+            text-align: center; overflow: hidden;
+        }
+
+        .card {
+            background: white; padding: 40px; border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            max-width: 420px; width: 90%; z-index: 10;
+        }
+
+        h2 { color: #ff4d6d; font-size: 1.5rem; margin-bottom: 20px; }
+        
+        input {
+            padding: 12px; border-radius: 12px; border: 2px solid #ffccd5;
+            width: 85%; margin-bottom: 20px; outline: none; font-size: 1rem;
+            text-align: center;
+        }
+
+        button {
+            padding: 12px 30px; border-radius: 50px; border: none;
+            cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 1rem;
+        }
+
+        .btn-main { 
+            background: #ff4d6d; color: white; 
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+        }
+        .btn-main:hover { background: #ff758f; }
+
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center;
+        }
+
+        .popup-box {
+            background: white; padding: 30px; border-radius: 20px;
+            max-width: 350px; width: 85%; animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+        #confirm-section, #main-content, #gift-area, #btn-run-container { display: none; }
+
+        .gift-box {
+            font-size: 70px; cursor: pointer; display: inline-block;
+            animation: shake 1.5s infinite; margin-top: 20px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0); }
+            15% { transform: rotate(10deg); }
+            30% { transform: rotate(-10deg); }
+        }
+
+        .birthday-photo {
+            width: 300px; height: 300px; object-fit: cover; border-radius: 14px;
+            margin: 12px auto 14px; display: block;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.18); border: 3px solid #ffe3ea;
+        }
+
+        .heart {
+            position: absolute; color: #ff4d6d; animation: float 4s ease-in infinite;
+            opacity: 0; pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        #btn-run { background: #ffb3c1; color: white; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="alert-popup" class="overlay">
+        <div class="popup-box">
+            <p style="font-size: 1.1rem; color: #ff4d6d;"><b>Ơ, ai đây?</b> 🧐</p>
+            <p>Không phải bé Quyên thì không xem được đâu nha! Nhập lại đi.</p>
+            <button class="btn-main" onclick="closeAlert()">Nhập lại nè</button>
+        </div>
+    </div>
+
+    <div id="gift-popup" class="overlay">
+        <div class="popup-box">
+            <span style="font-size: 50px;">📜</span>
+            <h2 style="margin-top: 10px;">Thông báo gia hạn!</h2>
+            <p>Gói <b>"Người yêu tuyệt vời nhất"</b> của em đã hết hạn.</p>
+            <p>Em có muốn gia hạn thêm <b>50 năm</b> nữa với ưu đãi <b>vô vàn món quà </b> không?</p>
+            <div style="margin-top: 20px; min-height: 100px;">
+                <button class="btn-main" onclick="showFinalPopup()">Chốt đơn luôn!</button>
+                <div id="btn-run-container" style="display: inline-block;">
+                    <button id="btn-run" onmouseover="runAway()">Để em suy nghĩ đã...</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-popup" class="overlay">
+        <div class="popup-box">
+            <span style="font-size: 60px;">🎉</span>
+            <h2 style="color: #ff4d6d; margin-top: 10px;">Gia hạn thành công!</h2>
+            <p style="font-size: 1.1rem; color: #333;"><b>Chúc em bé sinh nhật vui vẻ! Yêu em nhiều!❤️</b></p>
+        </div>
+    </div>
+
+    <div id="login-section" class="card">
+        <span style="font-size: 50px;">🔐</span>
+        <h2 style="color: #ff4d6d;">Vùng riêng tư</h2>
+        <input type="text" id="nameInput" placeholder="Nhập tên người xinh đẹp nhất...">
+        <br>
+        <button class="btn-main" onclick="checkName()">Tiếp tục</button>
+    </div>
+
+    <div id="confirm-section" class="card">
+        <h2 style="color: #ff4d6d; line-height: 1.4;">À em chính là cô bé xinh đẹp có ngày sinh nhật hôm nay phải không? 😍</h2>
+        <div style="margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; min-height: 200px; justify-content: center;">
+            <button id="btn-yes" class="btn-main" onclick="showMainContent()">Đúng dị</button>
+            <button id="btn-no" style="background: #f0f0f0; color: #555; padding: 12px 25px; border-radius: 50px; transition: 0.2s; z-index: 5;" onmouseover="handleNoHover()">Ko phải</button>
+        </div>
+    </div>
+
+    <div id="main-content" class="card">
+        <span style="font-size: 60px;">🎂</span>
+        <img class="birthday-photo" src="em.jpg" alt="Ảnh sinh nhật">
+        <h1 style="color: #ff4d6d;">Happy Birthday!</h1>
+        <p>Chúc Em bé tuổi 20 thật rực rỡ và hạnh phúc!</p>
+        <p style="color: #888; font-size: 0.9rem;"><i>"Em là đoạn code khó hiểu và xinh đẹp nhất của anh.🤭"</i></p>
+        
+        <div id="gift-area">
+            <div class="gift-box" onclick="openGift()">🎁</div>
+            <p style="color: #ff4d6d; font-weight: bold; font-size: 0.9rem; margin-top: 10px;">Ơ, có một hộp quà bí mật dành cho em nè. Bấm vào đi!</p>
+        </div>
+    </div>
+
+    <script>
+        const validNames = ["nguyễn thị ngọc quyên", "ngọc quyên", "ngoc quyen", "quyen", "quyên"];
+        const trollTexts = ["Hụt rồi nha!", "Nghĩ hơi lâu đấy!", "Đừng hòng thoát!", "Bấm Chốt đơn đi!", "Còn lâu nhé!"];
+        
+        // Danh sách chữ sẽ hiển thị theo thứ tự
+        const sequenceTexts = [
+            "Phải mà!", 
+            "Chính là em!", 
+            "Ko lệch đi đâu được!", 
+            "Là em mà ko cần phải trốn đâu!", 
+            "Bấm vào đây đi!"
+        ];
+        
+        let currentScale = 1;
+        let textIndex = 0;
+
+        function checkName() {
+            const name = document.getElementById('nameInput').value.toLowerCase().trim();
+            if (validNames.includes(name)) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('confirm-section').style.display = 'block';
+            } else {
+                document.getElementById('alert-popup').style.display = 'flex';
+            }
+        }
+
+        function handleNoHover() {
+            const btnNo = document.getElementById('btn-no');
+            const btnYes = document.getElementById('btn-yes');
+
+            // 1. Kiểm tra xem đã hiển thị hết danh sách chữ chưa
+            if (textIndex < sequenceTexts.length) {
+                // Thay đổi chữ theo thứ tự
+                btnYes.innerText = sequenceTexts[textIndex];
+                
+                // Tăng kích thước nút
+                currentScale += 0.3;
+                btnYes.style.transform = `scale(${currentScale})`;
+                
+                textIndex++;
+            } 
+            // Nếu đã đến chữ cuối cùng ("Bấm vào đây đi!"), nút Đúng dị sẽ không to thêm nữa 
+            // nhưng Logic chạy trốn của nút "Ko phải" bên dưới vẫn chạy.
+
+            // 2. Cho nút "Ko phải" chạy trốn liên tục
+            btnNo.style.position = 'fixed';
+            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+            btnNo.style.left = x + 'px';
+            btnNo.style.top = y + 'px';
+        }
+
+        function showMainContent() {
+            document.getElementById('confirm-section').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            setInterval(createHeart, 300);
+            setTimeout(() => {
+                document.getElementById('gift-area').style.display = 'block';
+            }, 1000);
+        }
+
+        function closeAlert() { document.getElementById('alert-popup').style.display = 'none'; }
+
+        function openGift() {
+            document.getElementById('gift-popup').style.display = 'flex';
+            document.getElementById('btn-run-container').style.display = 'inline-block';
+        }
+
+        function runAway() {
+            const btn = document.getElementById('btn-run');
+            btn.innerText = trollTexts[Math.floor(Math.random() * trollTexts.length)];
+            btn.style.position = 'fixed';
+            btn.style.left = Math.random() * (window.innerWidth - btn.offsetWidth) + 'px';
+            btn.style.top = Math.random() * (window.innerHeight - btn.offsetHeight) + 'px';
+        }
+
+        function showFinalPopup() {
+            document.getElementById('gift-popup').style.display = 'none';
+            document.getElementById('success-popup').style.display = 'flex';
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            const icons = ['❤️', '✨', '🌸', '🎁', '🎂'];
+            heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+    </script>
+</body>
+</html>
